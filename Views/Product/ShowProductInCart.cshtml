@@ -1,0 +1,84 @@
+﻿@{
+    ViewBag.Title = "ShowProductInCart";
+    Layout = "~/Views/Shared/Product/_LayoutPageIndex.cshtml";
+}
+
+@model IEnumerable<sln_SingleApartment.ViewModels.COrderDetailsViewModel>
+
+@{ViewBag.Title = "ShowProductInCart";
+    int Sum = 0;
+    int MemberID = 1;
+}
+
+
+
+@{
+    if (@Model == null)
+    {
+        <br />
+        <p>你的購物車是空的</p> @Html.ActionLink("繼續購物", "Home")
+    }
+    else
+    {
+        <form method="post">
+            @Html.Hidden("MemberID", MemberID)
+            <table class="table">
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ProductID)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ProductName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Quantity)
+                    <th>
+                        @Html.DisplayNameFor(model => model.ProductPrice)
+                    </th>
+                    <th>
+                        小計
+                    </th>
+                    <th>
+                       
+                    </th>
+                </tr>
+
+                @foreach (var item in Model)
+                {
+                <tr>
+                    <td>
+                        @Html.Hidden("txtProductID", item.ProductID)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ProductName)
+                    </td>
+                    <td>
+                        @Html.TextBox("txtQuantity", item.Quantity)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ProductPrice)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TotalPrice)
+                    </td>
+                    @{if (item.TotalPrice != null) { Sum += (int)item.TotalPrice; } }
+                    
+                    <td>
+                        @Html.ActionLink("刪除", "RemoveONEShowProductInCart", new { input = item.ProductID }, new { onclick = "return confirm('確定要刪除嗎')" }) 
+                    </td>
+                </tr>
+                }
+
+            </table>
+
+            @*總金額+下單*@
+            <div>
+                <p>總金額 @Sum </p>
+                <input type="submit" value="下單" onclick="alert('確認完成此筆訂單?若商品確認無誤請按確認')" />
+                <a href="/Product/Home" class="btn btn-default">回去繼續購物</a>
+                <a href="~/Product/RemoveShowProductInCart"class="btn btn-default">清空購物車</a>@*11/27新增*@
+            </div>
+        </form>
+       
+    }
+}
